@@ -143,9 +143,63 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
+// Function to create the text box
+function createTextBox() {
+  const textBoxDiv = document.createElement('div');
+  textBoxDiv.className = 'unlock--iCenter unlock--iDiv';
+  const textBox = document.createElement('textarea');
+  textBox.className = 'unlock--iTextBox';
+  textBox.rows = '10';
+  textBox.cols = '50';
+  textBox.placeholder = 'Enter your text here...';
+
+  const textBoxRemove = document.createElement('button');
+  textBoxRemove.className = 'unlock--iButton unlock--iCenter';
+  textBoxRemove.innerText = 'Remove TextBox';
+  textBoxRemove.addEventListener('click', () => {
+    textBoxDiv.remove();
+  });
+
+  textBoxDiv.appendChild(textBoxRemove);
+  textBoxDiv.appendChild(textBox);
+  return textBoxDiv;
+}
+
+// Open TextBox when Alt + C is pressed
+document.addEventListener('keydown', function (event) {
+  if (event.altKey && event.keyCode === 67) { // Alt + C
+    const existingTextBox = document.querySelector('.unlock--iTextBox');
+    if (existingTextBox) {
+      existingTextBox.parentElement.remove();
+    } else {
+      document.body.appendChild(createTextBox());
+    }
+  }
+});
+
+// Emergency Quit to delete all traces
+function emergencyQuit() {
+  document.querySelectorAll('.unlock--iDiv').forEach(div => div.remove());
+  document.querySelectorAll('.unlock--iButton').forEach(button => button.remove());
+  document.querySelectorAll('.unlock--iTextBox').forEach(textBox => textBox.remove());
+  document.body.focus();
+}
+
+document.addEventListener('keydown', function (event) {
+  if (event.altKey && event.ctrlKey && event.shiftKey && event.keyCode === 81) { // Ctrl + Shift + Alt + Q
+    emergencyQuit();
+  }
+});
+
 // Listen for messages from background.js
 chrome.runtime.onMessage.addListener(function (request) {
   if (request.message === 'displayChatGPT') {
     createChatGPTPopup();
+  } else if (request.message === 'modifyButtonDisplay') {
+    buttonDisplay();
+  } else if (request.message === 'emergencyDestroy') {
+    emergencyQuit();
+  } else if (request.message === 'restartExt') {
+    document.body.appendChild(insertButton);
   }
 });

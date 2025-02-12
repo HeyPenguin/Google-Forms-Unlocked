@@ -13,7 +13,6 @@
   "author": "Anonymous",
   "offline_enabled": true,
   "incognito": "split",
-  "kiosk_enabled": true,
   "permissions": ["activeTab", "tabs", "contextMenus"],
   "content_scripts": [
     {
@@ -21,18 +20,7 @@
         "https://docs.google.com/forms/u*",
         "https://docs.google.com/forms/d/e*",
         "https://chat.openai.com/*"
-      ],
-      "js": ["content.js"],
-      "css": ["content.css"]
+      ]
     }
-  ],
-  "app": {
-    "launch": {
-      "local_path": "popup/popup.html"
-    }
-  },
-  "background": {
-    "persistent": true,
-    "scripts": ["background.js"]
-  }
+  ]
 }
